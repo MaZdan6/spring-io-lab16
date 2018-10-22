@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import io.spring.lab.warehouse.error.DefaultErrorController;
+
 import static io.spring.lab.warehouse.WarehousePersistenceConfig.testItemsData;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = {
+        DefaultErrorController.class,
         ItemController.class
 })
 public class ItemControllerTest {
@@ -67,5 +70,12 @@ public class ItemControllerTest {
 
         verify(items, times(1))
                 .create(new Item(null, "test", 100, BigDecimal.valueOf(13.5)));
+    }
+
+    @Test
+    public void shouldReturn500WhenInternalError() throws Exception {
+        mvc.perform(get("/error"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Unexpected error"));
     }
 }
