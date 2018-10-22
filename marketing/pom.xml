@@ -66,13 +66,13 @@
 			<plugin>
 				<groupId>org.codehaus.gmavenplus</groupId>
 				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6.2</version>
 				<executions>
 					<execution>
 						<goals>
 							<goal>addTestSources</goal>
-							<goal>testGenerateStubs</goal>
-							<goal>testCompile</goal>
+							<goal>generateTestStubs</goal>
+							<goal>compileTests</goal>
 							<goal>removeTestStubs</goal>
 						</goals>
 					</execution>
