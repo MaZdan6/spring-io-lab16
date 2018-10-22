@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @SpringBootApplication
 public class DemoApplication {
 
@@ -26,9 +29,10 @@ class GreetingController {
 
 class Greeting {
 
-	private String message;
+	private final String message;
 
-	public Greeting(String message) {
+	@JsonCreator
+	public Greeting(@JsonProperty("message") String message) {
 		this.message = message;
 	}
 
