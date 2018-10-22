@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.spring.lab</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>autoconfigure</artifactId>
 	<version>0.0.16-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Spring IO Lab Demo</name>
-	<description>Spring IO Lab Demo</description>
+	<name>Spring IO Lab Autoconfigure</name>
+	<description>Spring IO Lab Autoconfigure</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -27,30 +27,19 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>
