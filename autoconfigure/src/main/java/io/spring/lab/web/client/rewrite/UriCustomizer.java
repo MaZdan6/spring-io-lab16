@@ -14,9 +14,8 @@ public interface UriCustomizer extends UnaryOperator<URI> {
     BinaryOperator<UriCustomizer> composer = (u1, u2) -> uri -> u1.andThen(u2).apply(uri);
 
     static UriCustomizer compose(List<UriCustomizer> customizers) {
-        return uri -> customizers.stream()
+        return customizers.stream()
                 .sorted(AnnotationAwareOrderComparator.INSTANCE)
-                .reduce(identity, composer)
-                .apply(uri);
+                .reduce(identity, composer);
     }
 }
