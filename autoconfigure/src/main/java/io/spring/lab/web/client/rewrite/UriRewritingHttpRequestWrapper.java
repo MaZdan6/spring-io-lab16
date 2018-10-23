@@ -1,4 +1,4 @@
-package io.spring.lab.web.client.request;
+package io.spring.lab.web.client.rewrite;
 
 import java.net.URI;
 
@@ -21,7 +21,7 @@ public class UriRewritingHttpRequestWrapper implements HttpRequest {
 
     @Override
     public URI getURI() {
-        return customizer.rewrite(request.getURI());
+        return customizer.apply(request.getURI());
     }
 
     @Override

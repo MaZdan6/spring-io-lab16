@@ -1,4 +1,4 @@
-package io.spring.lab.web.client;
+package io.spring.lab.web.client.rewrite;
 
 import java.io.IOException;
 
@@ -7,8 +7,6 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-import io.spring.lab.web.client.request.UriCustomizer;
-import io.spring.lab.web.client.request.UriRewritingHttpRequestWrapper;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
