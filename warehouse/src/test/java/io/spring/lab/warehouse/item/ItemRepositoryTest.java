@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -23,7 +22,6 @@ import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
         @Filter(type = ASSIGNABLE_TYPE, classes = WarehousePersistenceConfig.class),
         @Filter(type = ANNOTATION, classes = Repository.class)
 })
-@AutoConfigureTestDatabase
 public class ItemRepositoryTest extends SpringTestBase {
 
     @Autowired
@@ -47,7 +45,7 @@ public class ItemRepositoryTest extends SpringTestBase {
         assertThat(item.getId()).isGreaterThan(4L);
         assertThat(item.getName()).isEqualTo("E");
         assertThat(item.getCount()).isEqualTo(99);
-        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(3330, 2));
+        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(333000, 4));
     }
 
     @Test
@@ -60,7 +58,7 @@ public class ItemRepositoryTest extends SpringTestBase {
         theOne.ifPresent(item -> {
             assertThat(item.getName()).isEqualTo("A");
             assertThat(item.getCount()).isEqualTo(100);
-            assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(4000, 2));
+            assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(400000, 4));
         });
     }
 
@@ -72,7 +70,7 @@ public class ItemRepositoryTest extends SpringTestBase {
         // then
         assertThat(item).isNotNull();
         assertThat(item.getId()).isEqualTo(1L);
-        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(4000, 2));
+        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(400000, 4));
     }
 
     @Test
