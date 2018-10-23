@@ -1,6 +1,7 @@
 package io.spring.lab.warehouse.item;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.reflect.FieldUtils.writeField;
 
 class StubItemRepository implements ItemRepository {
@@ -42,6 +44,20 @@ class StubItemRepository implements ItemRepository {
         long id = setAndGetNextId(item);
         db.put(id, item);
         return item;
+    }
+
+    @Override
+    public Item findMostExpensive() {
+        return db.values().stream()
+                .max(Comparator.comparing(Item::getPrice))
+                .orElseThrow(() -> new RuntimeException("Empty DB!"));
+    }
+
+    @Override
+    public List<Item> findByNamePrefix(String prefix) {
+        return db.values().stream()
+                .filter(item -> item.getName().startsWith(prefix))
+                .collect(toList());
     }
 
     private long setAndGetNextId(Item item) {

@@ -1,6 +1,7 @@
 package io.spring.lab.warehouse.item;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -32,19 +33,59 @@ public class ItemRepositoryTest extends SpringTestBase {
     TestEntityManager jpa;
 
     @Test
-    public void shouldFindGivenItemJPA() {
-        jpa.persistAndFlush(new Item(null, "A", 100, BigDecimal.valueOf(40.0)));
+    public void shouldFindNewlyCreatedItem() {
+        // given
+        Item entity = new Item(null, "E", 99, BigDecimal.valueOf(33.3));
+        jpa.persistAndFlush(entity);
         jpa.clear();
 
-        Optional<Item> item = Optional.ofNullable(jpa.find(Item.class, 5L));
+        // when
+        Item item = jpa.find(Item.class, entity.getId());
 
-        assertThat(item).isPresent();
+        // then
+        assertThat(item).isNotNull();
+        assertThat(item.getId()).isGreaterThan(4L);
+        assertThat(item.getName()).isEqualTo("E");
+        assertThat(item.getCount()).isEqualTo(99);
+        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(3330, 2));
     }
 
     @Test
-    public void shouldFindGivenItem() {
-        Optional<Item> item = items.findOne(1L);
+    public void shouldFindExistingItem() {
+        // when
+        Optional<Item> theOne = items.findOne(1L);
 
-        assertThat(item).isPresent();
+        // then
+        assertThat(theOne).isPresent();
+        theOne.ifPresent(item -> {
+            assertThat(item.getName()).isEqualTo("A");
+            assertThat(item.getCount()).isEqualTo(100);
+            assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(4000, 2));
+        });
+    }
+
+    @Test
+    public void shouldFindMostExpensiveItem() {
+        // when
+        Item item = items.findMostExpensive();
+
+        // then
+        assertThat(item).isNotNull();
+        assertThat(item.getId()).isEqualTo(1L);
+        assertThat(item.getPrice()).isEqualTo(BigDecimal.valueOf(4000, 2));
+    }
+
+    @Test
+    public void shouldFindByNamePrefix() {
+        // given
+        Item item = jpa.persistAndFlush(
+                new Item(null, "Xero", 10, BigDecimal.valueOf(999.99)));
+
+        // when
+        List<Item> found = items.findByNamePrefix("X");
+
+        // then
+        assertThat(found).hasSize(1);
+        assertThat(found).containsExactly(item);
     }
 }

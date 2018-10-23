@@ -14,4 +14,8 @@ public interface ItemRepository {
     List<Item> findAll();
 
     Item save(Item item);
+
+    Item findMostExpensive();
+
+    List<Item> findByNamePrefix(String prefix);
 }
