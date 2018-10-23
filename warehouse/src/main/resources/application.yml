@@ -21,3 +21,9 @@ management:
   endpoint:
     health:
       show-details: "always"
+  metrics:
+    export:
+      jmx:
+        enabled: false
+      graphite:
+        enabled: false
