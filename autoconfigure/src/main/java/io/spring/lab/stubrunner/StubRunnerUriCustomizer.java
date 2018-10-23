@@ -20,7 +20,8 @@ public class StubRunnerUriCustomizer implements UriCustomizer {
 
     @Override
     public URI apply(URI uri) {
-        return ofNullable(stubFinder.findAllRunningStubs().getPort(uri.getHost()))
+        String serviceId = uri.getHost();
+        return ofNullable(stubFinder.findAllRunningStubs().getPort(serviceId))
                 .map(port -> fromUri(uri)
                         .host("localhost")
                         .port(port)

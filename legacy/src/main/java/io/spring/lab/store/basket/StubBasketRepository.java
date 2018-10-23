@@ -20,7 +20,8 @@ class StubBasketRepository implements BasketRepository {
 
     @Override
     public Basket save(Basket basket) {
-        long id = setAndGetNextId(basket);
+        long id = ofNullable(basket.getId())
+                .orElseGet(() -> generateAndSetId(basket));
         db.put(id, basket);
         return basket;
     }
@@ -30,7 +31,7 @@ class StubBasketRepository implements BasketRepository {
         return save(basket);
     }
 
-    private long setAndGetNextId(Basket basket) {
+    private long generateAndSetId(Basket basket) {
         try {
             long id = seq.incrementAndGet();
             writeField(basket, "id", id, true);
