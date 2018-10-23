@@ -9,3 +9,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: "none"
+
+management:
+  server:
+    port: "1${server.port}"
+  endpoints:
+    web:
+      base-path: "/admin"
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: "always"
