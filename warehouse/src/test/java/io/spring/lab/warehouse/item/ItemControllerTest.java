@@ -13,15 +13,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import io.spring.lab.warehouse.error.DefaultErrorController;
 
 import static io.spring.lab.warehouse.WarehousePersistenceConfig.testItemsData;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,12 +66,13 @@ public class ItemControllerTest {
 
     @Test
     public void shouldCreateItem() throws Exception {
+        doReturn(new Item(5L, "test", 100, BigDecimal.valueOf(13.5)))
+                .when(items).create(any(Item.class));
+
         mvc.perform(post("/items").contentType(APPLICATION_JSON_UTF8)
                 .content("{\"name\": \"test\", \"count\": 100, \"price\": 13.5}"))
-                .andExpect(status().isCreated());
-
-        verify(items, times(1))
-                .create(new Item(null, "test", 100, BigDecimal.valueOf(13.5)));
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/items/5"));
     }
 
     @Test

@@ -2,7 +2,7 @@ package io.spring.lab.warehouse.item
 
 import spock.lang.Specification
 
-import static io.spring.lab.warehouse.WarehousePersistenceConfig.testItemsData
+import static io.spring.lab.warehouse.WarehousePersistenceConfig.testDataInitializer
 
 class ItemServiceSpec extends Specification {
 
@@ -11,7 +11,7 @@ class ItemServiceSpec extends Specification {
     ItemService items = new ItemService(repository)
 
     void setup() {
-        testItemsData(repository)
+        testDataInitializer(repository).run(null)
     }
 
     def  "should find all items" () {

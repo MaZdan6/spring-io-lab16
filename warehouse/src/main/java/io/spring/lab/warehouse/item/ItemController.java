@@ -1,8 +1,8 @@
 package io.spring.lab.warehouse.item;
 
+import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import static io.spring.lab.warehouse.error.ErrorMessage.messageOf;
 import static io.spring.lab.warehouse.error.ErrorMessage.messageResponseOf;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -47,7 +49,11 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ItemRepresentation request) {
         Item item = items.create(request.asItem());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.created(selfUriOf(item)).build();
+    }
+
+    private URI selfUriOf(Item item) {
+        return linkTo(methodOn(ItemController.class).findOne(item.getId())).toUri();
     }
 
     @PutMapping("/{id}")
