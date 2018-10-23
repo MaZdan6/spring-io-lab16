@@ -1,0 +1,10 @@
+uri:
+  customizer:
+    enabled: true
+    rewrite:
+      warehouse:
+        host: "localhost"
+        port: 9100
+      marketing:
+        host: "localhost"
+        port: 9120
