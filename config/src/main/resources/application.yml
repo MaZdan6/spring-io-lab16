@@ -19,3 +19,11 @@ management:
   endpoint:
     health:
       show-details: "always"
+
+# registry first
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: "http://localhost:9010/eureka"
