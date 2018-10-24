@@ -51,6 +51,15 @@ class BasketServiceSpec extends Specification {
         then:
             basket.totalCount == newCount
             basket.totalPrice == newPrice
+        and:
+            Optional<BasketItem> basketItem = basketItemsRepository.findByBasketIdAndItemId(basket.id, 1L);
+            if (newCount > 0) {
+                assert basketItem.present
+                assert basketItem.get().unitCount == newCount
+                assert basketItem.get().totalPrice == newPrice
+            } else {
+                assert !basketItem.present
+            }
 
         where:
             totalCount | totalPrice | countDiff | priceDiff | newCount | newPrice
