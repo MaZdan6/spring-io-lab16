@@ -19,3 +19,11 @@ management:
   endpoint:
     health:
       show-details: "always"
+
+spring:
+  boot:
+    admin:
+      context-path: "/ui"
+      discovery:
+        converter:
+          management-context-path: "/admin"
