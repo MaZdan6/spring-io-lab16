@@ -1,5 +1,7 @@
 package io.spring.lab.warehouse.item
 
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import spock.lang.Specification
 
 import static io.spring.lab.warehouse.WarehousePersistenceConfig.testDataInitializer
@@ -7,8 +9,9 @@ import static io.spring.lab.warehouse.WarehousePersistenceConfig.testDataInitial
 class ItemServiceSpec extends Specification {
 
     ItemRepository repository = new StubItemRepository()
+    MeterRegistry meters = new SimpleMeterRegistry()
 
-    ItemService items = new ItemService(repository)
+    ItemService items = new ItemService(repository, meters)
 
     void setup() {
         testDataInitializer(repository).run(null)
