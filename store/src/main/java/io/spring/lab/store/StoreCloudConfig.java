@@ -3,6 +3,7 @@ package io.spring.lab.store;
 import java.util.List;
 
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUri;
 @Slf4j
 @Configuration
 @EnableFeignClients
+@EnableCircuitBreaker
 public class StoreCloudConfig {
 
     @Bean
