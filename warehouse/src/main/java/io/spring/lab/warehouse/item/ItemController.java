@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.spring.lab.warehouse.WarehouseApplication;
 import io.spring.lab.warehouse.error.ErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,9 @@ public class ItemController {
 
     @GetMapping
     List<ItemRepresentation> findAll() {
-        return items.findAll().stream()
+        List<Item> list = items.findAll();
+        log.info("Found {} items.", list.size());
+        return list.stream()
                 .map(ItemRepresentation::of)
                 .map(r -> r.withInstanceId(env.getRequiredProperty(INSTANCE_ID)))
                 .collect(toList());
@@ -49,13 +50,16 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemRepresentation findOne(@PathVariable("id") long id) {
-        return ItemRepresentation.of(items.findOne(id))
+        Item item = items.findOne(id);
+        log.info("Found item {}.", item.getName());
+        return ItemRepresentation.of(item)
                 .withInstanceId(env.getRequiredProperty(INSTANCE_ID));
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ItemRepresentation request) {
         Item item = items.create(request.asItem());
+        log.info("Created item {}.", item.getName());
         return ResponseEntity.created(selfUriOf(item)).build();
     }
 
@@ -65,11 +69,13 @@ public class ItemController {
 
     @PutMapping("/{id}")
     public ItemRepresentation update(@PathVariable("id") long id, @RequestBody ItemUpdate changes) {
+        log.info("Update item {}.", changes);
         return ItemRepresentation.of(items.update(changes.withId(id)));
     }
 
     @PutMapping("/{id}/stock")
     public ItemRepresentation updateStock(@PathVariable("id") long id, @RequestBody ItemStockUpdate changes) {
+        log.info("Update item stock {}.", changes);
         return ItemRepresentation.of(items.updateStock(changes.withId(id)));
     }
 
