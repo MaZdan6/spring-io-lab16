@@ -19,8 +19,14 @@ public class ItemRepresentation {
 
 	private BigDecimal price;
 
+	private String instanceId;
+
 	static ItemRepresentation of(Item item) {
-		return new ItemRepresentation(item.getName(), item.getCount(), item.getPrice());
+		return new ItemRepresentation(item.getName(), item.getCount(), item.getPrice(), null);
+	}
+
+	ItemRepresentation withInstanceId(String instanceId) {
+		return new ItemRepresentation(name, stock, price, instanceId);
 	}
 
 	Item asItem() {

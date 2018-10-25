@@ -3,26 +3,24 @@ package io.spring.lab.warehouse.item;
 import java.math.BigDecimal;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import io.spring.lab.warehouse.SpringTestBase;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@Slf4j
 @JsonTest
 @TestPropertySource(properties = {
         "debug=true",
         "spring.jackson.serialization.indent-output=true"
 })
-@Slf4j
-public class ItemRepresentationTest {
+public class ItemRepresentationTest extends SpringTestBase {
 
     @Autowired
     JacksonTester<ItemRepresentation> json;
@@ -30,7 +28,7 @@ public class ItemRepresentationTest {
     @Test
     public void shouldSerializeItemRepresentation() throws Exception {
         // given ItemRepresentation
-        ItemRepresentation item = new ItemRepresentation("A", 100, BigDecimal.valueOf(40.0));
+        ItemRepresentation item = new ItemRepresentation("A", 100, BigDecimal.valueOf(40.0), null);
 
         // write JSON using above JacksonTester
         JsonContent<ItemRepresentation> result = json.write(item);

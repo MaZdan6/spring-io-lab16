@@ -3,13 +3,13 @@ package io.spring.lab.warehouse.item;
 import java.math.BigDecimal;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import io.spring.lab.warehouse.SpringTestBase;
 import io.spring.lab.warehouse.error.DefaultErrorController;
 
 import static io.spring.lab.warehouse.WarehousePersistenceConfig.testItemsData;
@@ -25,12 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = {
         DefaultErrorController.class,
         ItemController.class
 })
-public class ItemControllerTest {
+@TestPropertySource(properties = {
+        "info.instanceId=test"
+})
+public class ItemControllerTest extends SpringTestBase {
 
     @MockBean
     ItemService items;

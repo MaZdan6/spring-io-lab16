@@ -1,6 +1,14 @@
 spring:
   application:
     name: "warehouse"
+
+# info.instanceId
+eureka:
+  instance:
+    instanceId: "${spring.application.name}:${info.instanceId}"
+
+---
+spring:
   cloud:
     config:
       fail-fast: true

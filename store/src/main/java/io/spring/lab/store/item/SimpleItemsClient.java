@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class SimpleItemsClient implements ItemsClient {
@@ -34,7 +36,9 @@ public class SimpleItemsClient implements ItemsClient {
 
     @Override
     public ItemRepresentation findOne(long id) {
-        return rest.exchange(ITEM_URI, HttpMethod.GET, emptyEntity(), ItemRepresentation.class, id).getBody();
+        ItemRepresentation representation = rest.exchange(ITEM_URI, HttpMethod.GET, emptyEntity(), ItemRepresentation.class, id).getBody();
+        log.info("Got item from instance: {}", representation.getInstanceId());
+        return representation;
     }
 
     @Override

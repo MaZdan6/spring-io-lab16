@@ -29,6 +29,9 @@ public class StoreCloudConfig {
             log.info("Warehouse instances found:");
             client.getInstances("warehouse").forEach(serviceInstance -> {
                 log.info(" - {}", serviceInstance.getUri());
+                log.info(" - metadata:");
+                serviceInstance.getMetadata().entrySet().forEach(entry ->
+                        log.info(" -- {}: {}", entry.getKey(), entry.getValue()));
                 log.info(" - items found:");
                 new RestTemplate()
                         .exchange(fromUri(serviceInstance.getUri()).path("/items").build().toUri(), GET, null, responseType)
