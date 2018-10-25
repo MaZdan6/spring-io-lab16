@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.util.SocketUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +27,17 @@ public class WarehouseApplication {
 
 	private static Map<String, Object> defaultProperties() {
 		Map<String, Object> props = new HashMap<>();
-		props.put(INSTANCE_ID, UUID.randomUUID().toString().replaceAll("-", ""));
+
+		String instanceId = UUID.randomUUID().toString().replaceAll("-", "");
+		props.put(INSTANCE_ID, instanceId);
+
+		int serverPort = SocketUtils.findAvailableTcpPort();
+		props.put("server.port", serverPort);
+
+		int managementPort = SocketUtils.findAvailableTcpPort();
+		props.put("management.server.port", managementPort);
+		props.put("eureka.instance.metadata-map.management.port", managementPort);
+
 		return props;
 	}
 
