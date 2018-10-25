@@ -1,14 +1,12 @@
 package io.spring.lab.store.item;
 
-import java.util.List;
-
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import io.spring.lab.cloud.ConditionalOnMissingFeignClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,26 +16,19 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 @Slf4j
 @Component
 @AllArgsConstructor
+@ConditionalOnMissingFeignClient
 public class SimpleItemsClient implements ItemsClient {
 
     private static final String BASE_URI = "http://warehouse";
-    private static final String ITEMS_URI = BASE_URI + "/items";
     private static final String ITEM_URI = BASE_URI + "/items/{id}";
     private static final String ITEM_STOCK_URI = BASE_URI + "/items/{id}/stock";
 
     private final RestTemplate rest;
 
     @Override
-    public List<ItemRepresentation> findAll() {
-        ParameterizedTypeReference<List<ItemRepresentation>> type =
-                new ParameterizedTypeReference<List<ItemRepresentation>>() {};
-        return rest.exchange(ITEMS_URI, HttpMethod.GET, emptyEntity(), type).getBody();
-    }
-
-    @Override
     public ItemRepresentation findOne(long id) {
         ItemRepresentation representation = rest.exchange(ITEM_URI, HttpMethod.GET, emptyEntity(), ItemRepresentation.class, id).getBody();
-        log.info("Got item from instance: {}", representation.getInstanceId());
+        log.info("Simple client got item from instance: {}", representation.getInstanceId());
         return representation;
     }
 

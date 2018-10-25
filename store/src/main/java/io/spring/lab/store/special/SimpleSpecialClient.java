@@ -1,11 +1,17 @@
 package io.spring.lab.store.special;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import io.spring.lab.cloud.ConditionalOnMissingFeignClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
+@ConditionalOnMissingFeignClient
 @AllArgsConstructor
 public class SimpleSpecialClient implements SpecialClient {
 
@@ -16,6 +22,10 @@ public class SimpleSpecialClient implements SpecialClient {
 
     @Override
     public SpecialCalculation calculateFor(long itemId, SpecialCalculationRequest request) {
-        return rest.postForObject(SPECIAL_CALCULATION_URI, request, SpecialCalculation.class, itemId);
+        SpecialCalculation calculation = rest.postForObject(SPECIAL_CALCULATION_URI, request, SpecialCalculation.class, itemId);
+        log.info("Simple client got special calculation: {} ({})",
+                calculation.getTotalPrice(),
+                Optional.ofNullable(calculation.getSpecialId()).orElse("regular"));
+        return calculation;
     }
 }
