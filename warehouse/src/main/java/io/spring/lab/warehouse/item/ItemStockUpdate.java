@@ -1,5 +1,7 @@
 package io.spring.lab.warehouse.item;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,6 +18,11 @@ public class ItemStockUpdate {
 	private final long id;
 
 	private final int countDiff;
+
+	@JsonCreator
+	static ItemStockUpdate of(@JsonProperty("id") long id, @JsonProperty("countDiff") int countDiff) {
+		return new ItemStockUpdate(id, countDiff);
+	}
 
 	public static ItemStockUpdate of(int countDiff) {
 		return new ItemStockUpdate(0, countDiff);
