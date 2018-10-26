@@ -1,15 +1,13 @@
 package io.spring.lab.store.item;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import io.spring.lab.cloud.ConditionalOnFeignClient;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,6 +18,8 @@ public class DeclarativeItemsClient implements ItemsClient {
 
     private final FeignItemsClient items;
 
+    private final ItemStreamsBinding binding;
+
     @Override
     public ItemRepresentation findOne(long id) {
         ItemRepresentation representation = items.findOne(id);
@@ -29,7 +29,7 @@ public class DeclarativeItemsClient implements ItemsClient {
 
     @Override
     public void updateStock(ItemStockUpdate changes) {
-        items.updateStock(changes.getId(), new FeignItemStockUpdate(changes.getCountDiff()));
+        binding.checkoutItem().send(MessageBuilder.withPayload(changes).build());
     }
 
     @FeignClient(name = "warehouse", path = "/items")
@@ -37,13 +37,5 @@ public class DeclarativeItemsClient implements ItemsClient {
 
         @GetMapping("/{id}")
         ItemRepresentation findOne(@PathVariable("id") long id);
-
-        @PutMapping("/{id}/stock")
-        ItemRepresentation updateStock(@PathVariable("id") long id, @RequestBody FeignItemStockUpdate changes);
-    }
-
-    @Value
-    class FeignItemStockUpdate {
-        private int countDiff;
     }
 }
