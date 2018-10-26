@@ -5,10 +5,13 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import io.spring.lab.cloud.ConditionalOnFeignClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @Slf4j
 @Component
@@ -22,7 +25,7 @@ public class DeclarativeItemsClient implements ItemsClient {
 
     @Override
     public ItemRepresentation findOne(long id) {
-        ItemRepresentation representation = items.findOne(id);
+        ItemRepresentation representation = items.findOne(APPLICATION_JSON_UTF8_VALUE, id);
         log.info("Declarative client got item from instance: {}", representation.getInstanceId());
         return representation;
     }
@@ -35,7 +38,7 @@ public class DeclarativeItemsClient implements ItemsClient {
     @FeignClient(name = "warehouse", path = "/items")
     interface FeignItemsClient {
 
-        @GetMapping("/{id}")
-        ItemRepresentation findOne(@PathVariable("id") long id);
+        @GetMapping(path = "/{id}")
+        ItemRepresentation findOne(@RequestHeader("Accept") String accept, @PathVariable("id") long id);
     }
 }
