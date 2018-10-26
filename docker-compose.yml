@@ -1,0 +1,92 @@
+version: '3'
+services:
+
+  registry:
+    image: 'sprio/registry'
+    ports:
+      - '9010:8080'
+    environment:
+      - 'SERVER_PORT=8080'
+      - 'EUREKA_INSTANCE_HOSTNAME=registry'
+
+  config:
+    image: 'sprio/config'
+    ports:
+      - '9000:8080'
+    environment:
+      - 'SERVER_PORT=8080'
+      - 'SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://gitlab.com/kaczynskid/spring-io-lab16-config.git'
+      - 'SPRING_APPLICATION_JSON={"eureka": {"client": {"serviceUrl": {"defaultZone": "http://registry:8080/eureka"}}}}'
+#      - 'EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://registry:8080/eureka'
+
+  warehouse:
+    image: 'sprio/warehouse'
+    ports:
+      - '9100:8080'
+      - '19100:18080'
+    environment:
+      - 'SERVER_PORT=8080'
+      - 'MANAGEMENT_SERVER_PORT=18080'
+      - 'SPRING_PROFILES_ACTIVE=h2'
+      - 'SPRING_CLOUD_CONFIG_URI=http://config:8080'
+      - 'EUREKA_HOST=registry:8080'
+
+#  gateway:
+#    image: "sprio/gateway"
+#    ports: "9999:9999"
+#    environment:
+#      SERVER_PORT: "9999"
+#      EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE: "http://localhost:registry/eureka"
+#
+#
+#  warehouse-data:
+#    image: "postgres:9"
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - ".data:/var/lib/postgresql/data"
+#    environment:
+#      POSTGRES_PASSWORD: "sprio"
+#      POSTGRES_DB: "warehouse"
+#
+#  warehouse:
+#    image: "sprio/warehouse"
+#    ports:
+#      - "9999:9999"
+#    environment:
+#      SERVER_PORT: "9999"
+#      POSTGRES_PORT_5432_TCP_ADDR: "warehouse-data"
+#      EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE: "http://localhost:registry/eureka"
+#
+#  store-data:
+#    image: "mysql:5.7"
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ".data:/var/lib/mysql"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "sprio"
+#      MYSQL_DATABASE: "store"
+#
+#  store:
+#    image: "sprio/store"
+#    ports: "9998:9998"
+#    environment:
+#      SERVER_PORT: "9998"
+#      MYSQL_PORT_3306_TCP_ADDR: "store-data"
+#      EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE: "http://localhost:registry/eureka"
+#
+#  marketing-data:
+#    image: "mongo:3.0"
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - ".data:/data/db"
+#
+#  marketing:
+#    image: "sprio/marketing"
+#    ports: "9997:9997"
+#    environment:
+#      SERVER_PORT: "9997"
+#      MONGODB_PORT_27017_TCP_ADDR: "marketing-data"
+#      EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE: "http://localhost:registry/eureka"
